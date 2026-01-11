@@ -1,0 +1,179 @@
+Objectif général 
+Créer une application interne pour une concession automobile qui : 
+• automatise la gestion des emails et appels entrants via un agent IA, 
+• permet un handoff clair vers l’humain quand l’IA ne peut pas répondre, 
+• centralise le stock de véhicules, la liste d’attente clients, et la base de connaissances IA, 
+• fournit des statistiques claires sur emails et appels. 
+L’application doit être simple, rapide, utilisable sur desktop et mobile. 
+Rôles & permissions 
+Admin 
+• Accès complet à tous les onglets 
+• Gestion des paramètres 
+• Export des données 
+Vendeur / Conseiller 
+• Accès aux emails à répondre 
+• Accès à la liste d’attente 
+• Modification de la base IA et des véhicules 
+• Lecture des statistiques 
+Lecture seule 
+• Accès uniquement aux statistiques 
+Navigation principale (4 onglets) 
+ONGLET 1 — “À répondre (Emails)” 
+Objectif 
+Afficher uniquement les emails pour lesquels une réponse humaine est requise (l’IA ne répond pas). 
+Liste inbox 
+Afficher une liste avec les colonnes : 
+• Date / heure 
+• Client (nom si connu, sinon email) 
+• Sujet 
+• Canal (Email) 
+• Priorité : Basse / Moyenne / Haute 
+• Statut : Nouveau / En cours / Répondu / À relancer 
+• Motif IA (raison pour laquelle l’IA n’a pas répondu) 
+• Vendeur assigné 
+Filtres : 
+• statut 
+• priorité 
+• vendeur 
+• motif IA 
+Recherche par texte. 
+Vue détail email 
+Afficher : 
+• Contenu complet du mail 
+• Pièces jointes 
+• Historique des notes internes 
+• Client lié (ou création rapide de client) 
+Actions possibles : 
+• Répondre (éditeur de réponse email) 
+• Sauvegarder brouillon 
+• Envoyer 
+• Marquer “Répondu” 
+• Assigner à un vendeur 
+• Lier à un véhicule existant 
+• Créer un véhicule 
+• Créer une entrée en liste d’attente 
+• Générer une proposition de réponse IA (non envoyée automatiquement) 
+Logique 
+• Un email avec needs_human = true apparaît automatiquement ici 
+• Lors de l’envoi de la réponse, le statut passe à “Répondu” 
+• Toutes les actions sont loggées 
+ONGLET 2 — “Liste d’attente clients” 
+Objectif 
+Gérer les clients recherchant un véhicule non disponible et les notifier automatiquement par SMS lorsqu’un véhicule correspondant devient disponible. 
+Liste principale 
+Colonnes : 
+• Date d’ajout 
+• Nom client 
+• Téléphone 
+• Véhicule recherché (résumé) 
+• Statut : En attente / Contacté / Converti / Inactif 
+• Priorité 
+• Consentement SMS (oui/non) 
+Actions : 
+• Ajouter une demande 
+• Modifier 
+• Désactiver 
+Détail demande 
+• Coordonnées client 
+• Critères véhicule détaillés : 
+• marque, modèle, année, énergie, boîte 
+• kilométrage max 
+• budget max 
+• couleur 
+• Notes internes 
+• Historique des contacts 
+Boutons : 
+• Envoyer SMS manuel 
+• Marquer contacté 
+• Marquer converti 
+Automatisation SMS 
+• Lorsqu’un véhicule passe au statut “Disponible” : 
+• matcher automatiquement avec les demandes en attente 
+• envoyer un SMS si consentement = oui 
+• Enregistrer date, contenu et statut d’envoi 
+ONGLET 3 — “Base IA (Infos & Stock)” 
+Objectif 
+Permettre à la concession de fournir toutes les données utilisées par l’agent IA pour répondre correctement aux emails et appels. 
+Section A — Informations concession 
+Champs éditables : 
+• Horaires d’ouverture (par jour + jours fériés) 
+• Adresse et accès 
+• Téléphones et emails (vente, SAV, pièces) 
+• Procédures (essais, reprise, financement, livraison) 
+• FAQ (question → réponse) 
+• Liens & documents 
+• Règles de réponse IA : 
+• ton 
+• signature 
+• délais 
+• cas nécessitant une réponse humaine 
+Historique des modifications visible. 
+Section B — Véhicules en vente (Stock) 
+Liste des véhicules 
+Colonnes : 
+• Référence 
+• Marque 
+• Modèle 
+• Année 
+• Énergie 
+• Boîte 
+• Kilométrage 
+• Prix 
+• Couleur 
+• Statut : Disponible / Réservé / Vendu 
+• Utilisable par l’IA (oui/non) 
+• Date d’ajout 
+Actions : 
+• Ajouter un véhicule 
+• Modifier 
+• Marquer vendu 
+• Archiver 
+Fiche véhicule 
+• Détails complets 
+• Notes internes 
+• Historique des changements 
+• Option : photos 
+Logique IA 
+• L’IA peut répondre uniquement sur les véhicules : 
+• statut = Disponible 
+• utilisable par l’IA = oui 
+• L’IA ne doit jamais inventer un prix ou une disponibilité 
+• Si aucun véhicule ne correspond : 
+• proposer une inscription en liste d’attente 
+ONGLET 4 — “Statistiques” 
+Objectif 
+Suivre les performances des automatisations email et appel. 
+Indicateurs clés 
+Emails : 
+• Nombre total reçus 
+• Réponses automatiques IA 
+• Emails escaladés à humain 
+• Temps moyen de réponse humaine 
+Appels : 
+• Nombre total d’appels 
+• Appels traités par IA 
+• Appels transférés à humain 
+• Durée moyenne 
+Autres : 
+• Motifs d’escalade les plus fréquents 
+• Conversions depuis la liste d’attente 
+Filtres : 
+• Jour / semaine / mois 
+• Par vendeur 
+Export CSV disponible. 
+Modèles de données 
+Créer les objets suivants : 
+• EmailCase 
+• Client 
+• WaitlistRequest 
+• VehicleListing 
+• KnowledgeItem 
+Automatisations internes 
+• Badge / alerte si un email reste “À traiter” trop longtemps 
+• Suggestion d’ajout dans la Base IA si un motif revient souvent 
+• Alerte si un véhicule correspond à plusieurs demandes en attente 
+Contraintes UX 
+• Interface simple et claire 
+• Mobile friendly 
+• Temps de chargement rapide 
+• Journal d’audit des actions 
